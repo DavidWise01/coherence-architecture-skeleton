@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE VALENCE LATTICE — 8×8 Decadic Dive Instrument</title>
+<style>
+:root{
+  --paper:#e9e3cd;
+  --ink:#1c3d2e;
+  --ink-mid:#2f5a44;
+  --ink-faint:#7a937f;
+  --stamp:#8a3324;
+  --ochre:#8a6d2f;
+  --mono:"Courier New",Courier,monospace;
+  --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--paper);
+  background-image:repeating-linear-gradient(0deg, rgba(28,61,46,.025) 0 1px, transparent 1px 3px);
+  color:var(--ink);font-family:var(--serif);line-height:1.5;padding:10px;
+}
+.sheet{max-width:860px;margin:0 auto;border:2px solid var(--ink);outline:1px solid var(--ink);outline-offset:4px;padding:18px 14px 28px}
+.masthead{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:12px}
+.mast-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--ink-mid);text-transform:uppercase}
+.mast-title{font-size:clamp(24px,6vw,40px);letter-spacing:.05em;font-weight:700;margin:6px 0 2px;text-transform:uppercase}
+.mast-sub{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--ink-mid);text-transform:uppercase}
+.intro{font-size:13.5px;max-width:660px;margin:12px auto 0;text-align:center;color:var(--ink-mid);line-height:1.6}
+/* breadcrumb */
+.crumbwrap{margin:14px 0 4px;text-align:center}
+.crumbwrap .label{font-family:var(--mono);font-size:9px;letter-spacing:.3em;color:var(--ink-mid);text-transform:uppercase;display:block;margin-bottom:4px}
+#crumbs{font-family:var(--mono);font-size:12px;letter-spacing:.06em;line-height:1.9;word-break:break-all}
+#crumbs .seg{border:1px solid var(--ink-mid);padding:1px 6px;margin:0 2px;display:inline-block}
+#crumbs .seg.root{border-color:var(--ochre);color:var(--ochre)}
+/* controls */
+.ctrls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
+.cbtn{appearance:none;background:transparent;cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;border:1.5px solid var(--ink);color:var(--ink)}
+.cbtn:disabled{opacity:.35;cursor:default}
+.cbtn:focus-visible{outline:2px dashed var(--stamp);outline-offset:2px}
+.cbtn.warm{border-color:var(--stamp);color:var(--stamp)}
+#status{font-family:var(--mono);font-size:11px;text-align:center;color:var(--ink-mid);letter-spacing:.06em;min-height:1.5em;margin-bottom:8px}
+#status .ee{color:var(--stamp);font-weight:700}
+/* lattice */
+.latwrap{display:flex;justify-content:center}
+.lat{display:grid;grid-template-columns:34px repeat(8,1fr);gap:2px;width:min(94vw,480px)}
+.axlab{font-family:var(--mono);font-size:9px;color:var(--ink-mid);display:flex;align-items:center;justify-content:center;letter-spacing:.04em}
+.cell{
+  aspect-ratio:1;border:1px solid var(--ink-mid);background:rgba(255,255,255,.25);
+  font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;color:var(--ink-mid);user-select:none;
+}
+.cell.res{
+  background:repeating-linear-gradient(45deg, rgba(28,61,46,.14) 0 4px, transparent 4px 8px);
+  border-style:dashed;cursor:not-allowed;color:var(--ink-faint);
+}
+.cell.probed{background:rgba(28,61,46,.10)}
+.cell.elem{background:rgba(138,109,47,.28);border:1.5px solid var(--ochre);color:#4a3c18;font-weight:700;font-size:8.5px;text-align:center;line-height:1.15;padding:1px}
+.cell.cursor{outline:2px solid var(--stamp);outline-offset:-2px}
+.cell:active{transform:scale(.96)}
+.gridfoot{font-family:var(--mono);font-size:9.5px;color:var(--ink-faint);text-align:center;margin-top:6px;letter-spacing:.08em}
+/* panels */
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+@media(max-width:620px){.panels{grid-template-columns:1fr}}
+.panel{border:1.5px solid var(--ink);padding:10px 12px}
+.panel h3{font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-mid);margin-bottom:8px;text-align:center}
+#registry{font-family:var(--mono);font-size:11px;line-height:1.8;min-height:60px}
+#registry .r{border-bottom:1px dotted var(--ink-faint);padding:3px 0}
+#registry .nm{font-weight:700;color:#4a3c18}
+#registry .ad{color:var(--ink-mid)}
+#registry .sh{color:var(--stamp)}
+#registry .empty{color:var(--ink-faint);text-align:center;padding:14px 0}
+.math{font-family:var(--mono);font-size:11px;line-height:2}
+.math b{font-weight:700}
+.math .dim{color:var(--stamp)}
+/* framing */
+.frame{border:1.5px solid var(--ink);margin-top:18px;padding:12px;font-size:13px;line-height:1.6}
+.frame h3{font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-mid);margin-bottom:6px;text-align:center}
+.frame .is{color:var(--ink)}
+.frame .isnt{color:var(--stamp)}
+.colophon{margin-top:24px;border-top:2px solid var(--ink);padding-top:12px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink-mid);letter-spacing:.08em;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<header class="masthead">
+  <div class="mast-eyebrow">Series E · Sheet 4 · Instrument, Not Detector</div>
+  <h1 class="mast-title">The Valence Lattice</h1>
+  <div class="mast-sub">8×8 Decadic Dive · Active Band .3 — .8 · Reserved .0–.2 / .9</div>
+  <p class="intro">Per spec: 8×8 grid, valence on both axes, reserved boundary bands framing the active window. PROBE a cell and an element may fall out (deterministic — same address, same result, always). DIVE into any active cell and the lattice recurses one decimal place down: an element at <b>.6</b> is registered <b>.06</b> one layer below, exactly as ordered. SCAN walks the layer linearly and halts when something falls out.</p>
+</header>
+
+<div class="crumbwrap">
+  <span class="label">Dive Stack · Address</span>
+  <div id="crumbs"></div>
+</div>
+
+<div class="ctrls">
+  <button class="cbtn" id="btnScan" onclick="scan()">Linear Scan</button>
+  <button class="cbtn" id="btnUp" onclick="ascend()" disabled>Ascend ▲</button>
+  <button class="cbtn warm" onclick="surface()">Surface ⏏</button>
+</div>
+<div id="status">Layer 0 · tap a cell to probe · long-press not required, tap a probed cell again to dive</div>
+
+<div class="latwrap">
+  <div class="lat" id="lat"></div>
+</div>
+<p class="gridfoot">HATCHED = RESERVED BAND (.0–.2 LOW / .9 HIGH) — BOUNDARY TOKENS, NOT ADDRESSABLE</p>
+
+<div class="panels">
+  <div class="panel">
+    <h3>Element Registry · Decimal-Shift Convention</h3>
+    <div id="registry"><div class="empty">nothing has fallen out yet</div></div>
+  </div>
+  <div class="panel">
+    <h3>Lattice Mathematics · Live</h3>
+    <div class="math" id="mathp"></div>
+  </div>
+</div>
+
+<div class="frame">
+  <h3>What This Is · What This Is Not</h3>
+  <p><span class="is">IS:</span> an addressing scheme — every dive appends a digit pair, so a depth-k cell is a coordinate with k+1 decimal places, restricted to digits 3–8. The reserved bands make the limit object a genuine <b>Cantor dust</b>: dimension log 36 / log 10 ≈ <b>1.5563</b>, total area → 0. Infinitely many addresses on vanishing territory — all name, no land. A ren-machine.</p>
+  <p style="margin-top:6px"><span class="isnt">IS NOT:</span> a particle detector. The elements that fall out are seeded by a hash of the address — the lattice doesn't find gravitons, it gives names to where you'd file one. Same epistemics as the rest of Series E: the instrument is honest about which register it writes to.</p>
+</div>
+
+<footer class="colophon">
+  RESERVED BANDS ARE WHAT MAKE IT FRACTAL · THE GAP IS LOAD-BEARING<br>
+  DIMENSION 1.5563 · MEASURE ZERO · ADDRESSES INFINITE<br>
+  THE VALENCE LATTICE · SHEET 4 · JUNE 2026
+</footer>
+
+</div>
+<script>
+/* ---------- config ---------- */
+const ACTIVE=[3,4,5,6,7,8];               // active digits per axis
+const POOL=["GRAVITON","PHOTON","GLUON","W BOSON","Z BOSON","HIGGS","NEUTRINO","AXION","DILATON","MODULUS","STERILE ν","TACHYON"];
+const DENSITY=8;                           // ~1 in 8 active cells holds an element
+let stack=[];                              // dive stack: [{h,v}] pairs of digit chars
+let probed={};                             // addr -> true
+let registry=[];                           // {name, layer, h, v, hAddr, vAddr, shifted}
+let scanning=null;
+
+/* deterministic hash: same address => same outcome, forever */
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0)}
+function addrH(){return "."+stack.map(p=>p.h).join("")}
+function addrV(){return "."+stack.map(p=>p.v).join("")}
+function cellKey(h,v){return addrH()+h+"|"+addrV()+v}
+function elementAt(h,v){
+  // spec demo seed: the graviton falls out at .6 (h=6,v=6) on layer 0
+  if(stack.length===0&&h===6&&v===6)return "GRAVITON";
+  const x=hash(cellKey(h,v));
+  if(x%DENSITY!==0)return null;
+  return POOL[x%POOL.length];
+}
+
+/* ---------- render ---------- */
+function render(){
+  const lat=document.getElementById('lat');
+  lat.innerHTML="";
+  const depth=stack.length;
+  const place=n=>"."+"0".repeat(depth)+n; // label helper: .6 at L0, .06 at L1...
+  // top-left corner + column labels: [RES][3..8][RES]
+  lat.appendChild(ax("h→v↓"));
+  lat.appendChild(ax("RES"));
+  ACTIVE.forEach(d=>lat.appendChild(ax(place(d))));
+  lat.appendChild(ax("RES"));
+  const rows=[["RES",null]].concat(ACTIVE.map(d=>[place(d),d])).concat([["RES",null]]);
+  rows.forEach(([lab,vd])=>{
+    lat.appendChild(ax(lab));
+    // low reserved col, six active, high reserved
+    [null].concat(ACTIVE).concat([null]).forEach((hd,i)=>{
+      const c=document.createElement('div');
+      const isRes=(vd===null)||(hd===null);
+      c.className='cell'+(isRes?' res':'');
+      if(isRes){c.textContent='∅';c.onclick=()=>flash("BOUNDARY TOKEN — reserved band (.0–.2 / .9). Not addressable. The gap is structural.");}
+      else{
+        const key=cellKey(hd,vd);
+        const el=probed[key]?elementAt(hd,vd):null;
+        if(probed[key])c.classList.add('probed');
+        if(el){c.classList.add('elem');c.textContent=el;}
+        c.dataset.h=hd;c.dataset.v=vd;
+        c.onclick=()=>tap(hd,vd,c);
+      }
+      lat.appendChild(c);
+    });
+  });
+  // crumbs
+  const cr=document.getElementById('crumbs');
+  cr.innerHTML='<span class="seg root">L0 ROOT</span>'+stack.map((p,i)=>
+    `<span class="seg">▼ L${i+1} (h${"."+"0".repeat(i)+p.h}, v${"."+"0".repeat(i)+p.v})</span>`).join('');
+  document.getElementById('btnUp').disabled=depth===0;
+  // math panel (constants verified by node before build)
+  const cw=Math.pow(10,-(depth+1));
+  const meas=Math.pow(0.36,depth+1);
+  document.getElementById('mathp').innerHTML=
+    `depth: <b>${depth}</b><br>`+
+    `cell width: <b>10<sup>−${depth+1}</sup> = ${cw}</b><br>`+
+    `active cells this layer: <b>36 / 64</b><br>`+
+    `surviving measure: <b>0.36<sup>${depth+1}</sup> ≈ ${meas.toExponential(3)}</b><br>`+
+    `limit dimension: <b class="dim">log 36 / log 10 = 1.5563…</b><br>`+
+    `limit area: <b>0</b> · addresses: <b>∞</b>`;
+}
+function ax(t){const d=document.createElement('div');d.className='axlab';d.textContent=t;return d}
+function flash(msg,ee){const s=document.getElementById('status');s.innerHTML=ee?`<span class="ee">${msg}</span>`:msg}
+
+/* ---------- interaction ---------- */
+function tap(h,v,c){
+  const key=cellKey(h,v);
+  if(!probed[key]){ // first tap: probe
+    probed[key]=true;
+    const el=elementAt(h,v);
+    if(el){registerElement(el,h,v);render();flash(`${el} fell out at (h ${pl(h)}, v ${pl(v)}) — registered ${shiftLabel(h)} one layer down. Tap again to dive.`,true);}
+    else {render();flash(`probed (h ${pl(h)}, v ${pl(v)}) — empty. Tap again to dive anyway.`);}
+  } else { dive(h,v); }
+}
+function pl(d){return "."+"0".repeat(stack.length)+d}
+function shiftLabel(d){return "."+"0".repeat(stack.length+1)+d}
+function registerElement(name,h,v){
+  const entry={name,layer:stack.length,h:pl(h),v:pl(v),shifted:shiftLabel(h),
+    hAddr:addrH()+h, vAddr:addrV()+v};
+  if(registry.some(r=>r.hAddr===entry.hAddr&&r.vAddr===entry.vAddr))return;
+  registry.push(entry);
+  const rg=document.getElementById('registry');
+  rg.innerHTML=registry.map(r=>
+    `<div class="r"><span class="nm">${r.name}</span> · L${r.layer} <span class="ad">(h ${r.h}, v ${r.v})</span><br>full addr <span class="ad">h ${r.hAddr} · v ${r.vAddr}</span> → child-root <span class="sh">${r.shifted}</span></div>`).join('');
+}
+function dive(h,v){
+  stopScan();
+  stack.push({h:String(h),v:String(v)});
+  render();
+  flash(`dove into (h ${"."+"0".repeat(stack.length-1)+h}, v ${"."+"0".repeat(stack.length-1)+v}) — layer ${stack.length}. Same rules, one decimal down.`);
+}
+function ascend(){stopScan();if(stack.length){stack.pop();render();flash(`ascended to layer ${stack.length}.`);}}
+function surface(){stopScan();stack=[];render();flash("surfaced to layer 0. Probed memory persists — the lattice doesn't forget.");}
+
+/* linear scan: raster the 36 active cells, halt on fall-out */
+function scan(){
+  stopScan();
+  const cells=[];ACTIVE.forEach(v=>ACTIVE.forEach(h=>cells.push([h,v])));
+  let i=0;
+  flash("scanning linearly…");
+  scanning=setInterval(()=>{
+    document.querySelectorAll('.cell.cursor').forEach(c=>c.classList.remove('cursor'));
+    if(i>=cells.length){stopScan();flash("scan complete — layer exhausted, no new fall-out. Dive somewhere; the next layer is fresh.");render();return;}
+    const [h,v]=cells[i++];
+    const key=cellKey(h,v);
+    const fresh=!probed[key];
+    probed[key]=true;
+    render();
+    const el=document.querySelector(`.cell[data-h="${h}"][data-v="${v}"]`);
+    if(el)el.classList.add('cursor');
+    const e=elementAt(h,v);
+    if(e&&fresh){registerElement(e,h,v);render();stopScan();
+      flash(`SCAN HALT: ${e} fell out at (h ${pl(h)}, v ${pl(v)}) → registered ${shiftLabel(h)}. Tap it to dive.`,true);}
+  },120);
+}
+function stopScan(){if(scanning){clearInterval(scanning);scanning=null}}
+
+render();
+</script>
+</body>
+</html>

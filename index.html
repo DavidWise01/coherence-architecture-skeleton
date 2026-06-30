@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coherence Architecture Skeleton</title>
+<style>
+:root{--ink:#f8f3ff;--muted:#b9a9d3;--line:rgba(224,190,255,.22);--truth:#67e8ff;--shadow:#ff4fe3;--bridge:#ffd166}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 70% 12%,rgba(103,232,255,.15),transparent 30rem),radial-gradient(circle at 20% 82%,rgba(255,79,227,.13),transparent 28rem),linear-gradient(135deg,#020105,#080012 52%,#000)}
+header{padding:clamp(28px,6vw,80px)}
+h1{font-size:clamp(52px,9vw,120px);line-height:.84;letter-spacing:-.08em;text-transform:uppercase;margin:0 0 22px}
+.grad{background:linear-gradient(105deg,#fff,#eadbff 24%,var(--truth) 48%,var(--shadow) 78%,var(--bridge));-webkit-background-clip:text;color:transparent}
+p{color:#cbbfe2;line-height:1.7;font-size:18px;max-width:820px}
+main{padding:0 clamp(24px,5vw,72px) 80px}
+.map{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+.node{border:1px solid var(--line);border-radius:30px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.025));box-shadow:0 26px 76px rgba(0,0,0,.25)}
+.node h2{margin:0 0 10px;font-size:24px;text-transform:uppercase;letter-spacing:.06em}.node p{font-size:15px;margin:0}
+.truth{grid-column:span 4;border-color:rgba(103,232,255,.45)}.shadow{grid-column:span 4;border-color:rgba(255,79,227,.42)}.bridge{grid-column:span 4;border-color:rgba(255,209,102,.42)}.quadpole{grid-column:span 8}.resolver{grid-column:span 4}.monitor{grid-column:span 12}
+.flow{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.pill{border:1px solid var(--line);border-radius:999px;padding:9px 12px;color:#e8dcff;background:rgba(255,255,255,.04)}
+.poles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}.pole{border:1px solid rgba(224,190,255,.14);border-radius:20px;padding:16px;text-align:center;background:rgba(255,255,255,.035)}
+footer{padding:32px clamp(24px,5vw,72px);color:var(--muted);border-top:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.25)}
+@media(max-width:900px){.truth,.shadow,.bridge,.quadpole,.resolver{grid-column:span 12}.poles{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><h1><span class="grad">Skeleton</span><br>Then Pieces</h1><p>A clean software architecture for the triple-Möbius quadpole model. The geometry becomes a practical inference loop: truth, shadow, bridge, quadpole, resolver, and stability monitor.</p></header>
+<main><section class="map">
+<article class="node truth"><h2>Truth Strip</h2><p>Selects the strongest coherent candidate. This is the current best inference, not absolute truth.</p><div class="flow"><span class="pill">primary signal</span><span class="pill">confidence</span></div></article>
+<article class="node shadow"><h2>Shadow Strip</h2><p>Stores unchosen candidates, contradictions, discarded paths, and suppressed alternatives.</p><div class="flow"><span class="pill">alternatives</span><span class="pill">pressure</span></div></article>
+<article class="node bridge"><h2>Bridge Strip</h2><p>Mediates truth and shadow so contradiction becomes useful instead of destructive.</p><div class="flow"><span class="pill">synthesis</span><span class="pill">reconciliation</span></div></article>
+<article class="node quadpole"><h2>Quadpole</h2><p>Four directional tensions stabilize the system across time and identity.</p><div class="poles"><div class="pole">Past<br><small>memory</small></div><div class="pole">Future<br><small>prediction</small></div><div class="pole">Self<br><small>continuity</small></div><div class="pole">Correction<br><small>error return</small></div></div></article>
+<article class="node resolver"><h2>Resolver</h2><p>Collapses the mediated signal into one output while preserving enough uncertainty for adaptation.</p><div class="flow"><span class="pill">final output</span><span class="pill">near-zero balance</span></div></article>
+<article class="node monitor"><h2>Stability Monitor</h2><p>Scores the system. Target zone: not rigid, not chaotic. A useful band is approximately 0.78–0.88.</p><div class="flow"><span class="pill">too high = rigid</span><span class="pill">too low = drift</span><span class="pill">middle = adaptive coherence</span></div></article>
+</section></main>
+<footer>Coherence Architecture Skeleton · place pieces, run loop, watch stability.</footer>
+</body></html>

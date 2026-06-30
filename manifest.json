@@ -1,0 +1,17 @@
+{
+  "name": "Coherence Architecture Skeleton",
+  "version": "0.1.0",
+  "entry": "index.html",
+  "target_stability_band": [
+    0.78,
+    0.88
+  ],
+  "pieces": [
+    "truth_strip",
+    "shadow_strip",
+    "bridge_strip",
+    "quadpole",
+    "resolver",
+    "stability_monitor"
+  ]
+}
